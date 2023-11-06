@@ -14,7 +14,7 @@ Offer.prototype.init = function() {
                             </li>');
   offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel">\
                             <div class="row">\
-                            <div class="col-md-3">\
+                            <div class="col-md-2">\
                               <div class="w3-card w3-indigo w3-round-large px-2 py-2">\
                                 <h2 class="text-center w3-border-bottom pb-2">Existing brands</h2>\
                                 <div class="d-grid mb-2">\
@@ -29,7 +29,7 @@ Offer.prototype.init = function() {
                                 </div> \
                               </div>\
                             </div>\
-                            <div class="col-md-9 items-container">\
+                            <div class="col-md-10 items-container">\
                               <div class="w3-panel w3-dark-gray my-0 no-brand-alert">\
                                 <h3>No brands.</h3>\
                                 <p>Please create a new brand.</p>\

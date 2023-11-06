@@ -5,3 +5,8 @@ body {
 .brands-container li a {
   text-decoration: none;
 }
+
+.img-container {
+  background-image: url('../images/sample (1).jpg');
+  width: 50%;
+}

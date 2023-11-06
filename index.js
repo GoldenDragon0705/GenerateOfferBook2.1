@@ -1,6 +1,7 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron')
 const url = require('url')
-const path = require('path')
+const path = require('path');
+const { param } = require('jquery');
 let win;
 
 function createWindow() {
@@ -15,6 +16,11 @@ function createWindow() {
       // enableRemoteModule: true,
       // nodeIntegrationInWorker: true,
     }   
+  });
+
+  ipcMain.handle('dialog', (event, method, params) => {
+    const filenames = dialog[method](win, params) || [];
+    event.sender.send("file_names", filenames);
   });
 
   win.loadURL(url.format({
