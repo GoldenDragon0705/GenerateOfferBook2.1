@@ -1,17 +1,19 @@
 const Offer = function(id, offername) {
   this.id = id;
   this.offername = offername;
+  
   this.init();
-};
 
-/**
- * init ui of new offer
- */
+}
+
 Offer.prototype.init = function() {
+
+  const self = this;
+
   offersHeader.append('<li class="nav-item">\
-                              <a class="nav-link" data-bs-toggle="tab" href="#' + this.id + '" data-offername="' + this.offername + '">' + this.offername + ' *</a>\
+                              <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '">' + self.offername + ' *</a>\
                             </li>');
-  offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + this.id + '" role="tabpanel">\
+  offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel">\
                             <div class="row">\
                             <div class="col-md-3">\
                               <div class="w3-card w3-indigo w3-round-large px-2 py-2">\
@@ -40,11 +42,11 @@ Offer.prototype.init = function() {
     // set this tab to active
     offersHeader.find('.nav-link').removeClass("active");
     offersContainer.find('.tab-pane').removeClass("active");
-    $('[href="#' + this.id + '"]').addClass("active");
-    $('#' + this.id).addClass("active");
+    $('[href="#' + self.id + '"]').addClass("active");
+    $('#' + self.id).addClass("active");
 
     // bind events new components
-    const newContainer = $('#' + this.id);
+    const newContainer = $('#' + self.id);
     const inputNewBrandName = newContainer.find('.new-brand-name');
     const btnCreateNewBrand = newContainer.find('.btn-create-new-brand');
     inputNewBrandName.on('input', function() {
@@ -60,5 +62,17 @@ Offer.prototype.init = function() {
     btnCreateNewBrand.on("click", function() {
       const brandName = inputNewBrandName.val();
       if(!brandName.length) return;
+      if(self.createBrand(brandName)) inputNewBrandName.val("");
     });
+    
+};
+
+/**
+ * create new brand of @brandName
+ * @param {*} brandName 
+ * @returns 
+ */
+Offer.prototype.createBrand = function(brandName) {
+  
+  return true;
 };
