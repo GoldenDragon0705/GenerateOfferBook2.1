@@ -47,7 +47,7 @@ const Offerbook = (function () {
       electron.onFilenames(function(params) {
         const { offerId, brandId, mode, filenames } = params;
         if(mode === "ITEM_IMAGE_MODE") {
-          offers[offerId].loadImages(brandId, filenames);
+          offers[offerId].loadedItemImages(brandId, filenames);
         }
       });
     } catch (e) {
