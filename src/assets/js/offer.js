@@ -1,9 +1,8 @@
 const Offer = function(id, offername) {
   this.id = id;
   this.offername = offername;
-  
+  this.container = $('#' + id);
   this.init();
-
 }
 
 Offer.prototype.init = function() {
@@ -25,7 +24,7 @@ Offer.prototype.init = function() {
                                   <button class="w3-btn w3-ripple w3-blue w3-round-large btn-block btn-create-new-brand">Create new brand</button>\
                                 </div> \
                                 <div>\
-                                  <ul class="list-group list-group-flush bg-transparent list-group-numbered brands-container">\
+                                  <ul class="list-group list-group-flush bg-transparent brands-container">\
                                   </ul>\
                                 </div> \
                               </div>\
@@ -44,6 +43,9 @@ Offer.prototype.init = function() {
     offersContainer.find('.tab-pane').removeClass("active");
     $('[href="#' + self.id + '"]').addClass("active");
     $('#' + self.id).addClass("active");
+
+    // update container  
+    self.container = $('#' + self.id);
 
     // bind events new components
     const newContainer = $('#' + self.id);
@@ -73,6 +75,28 @@ Offer.prototype.init = function() {
  * @returns 
  */
 Offer.prototype.createBrand = function(brandName) {
+  const self = this;
+  if(self.container.find('[data-brandname="' + brandName + '"]').length) {
+    $.toast({
+      heading: 'Error',
+      text: 'This brand is already exist.',
+      icon: 'error',
+      position: 'top-right',
+    });
+    return false;
+  }
+  self.container.find('.brands-container').append('<li class="list-group-item" data-brandname="' + brandName + '">\
+                                                    <a href="javascript:" class="d-block">' + brandName + '</a>\
+                                                  </li>');
+
+  self.container.find('li[data-brandname] a').on("click", function() {
+    
+  });
   
+  if(self.container.find('li[data-brandname]').length == 1) {
+    self.container.find('li[data-brandname] a').click();
+  }
   return true;
 };
+
+
