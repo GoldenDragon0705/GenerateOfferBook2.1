@@ -6,7 +6,10 @@ body {
   text-decoration: none;
 }
 
-.img-container {
-  background-image: url('../images/sample (1).jpg');
-  width: 50%;
+.offer-actions-bar a {
+  text-decoration: none;
+}
+
+.offer-actions-bar a:hover {
+  text-decoration: underline;
 }
