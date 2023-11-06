@@ -23,7 +23,7 @@ Offer.prototype.init = function() {
                             <div class="row">\
                               <div class="col-md-3">\
                                 <div class="w3-card w3-indigo w3-round-large px-2 py-2">\
-                                  <h2 class="text-center w3-border-bottom pb-2">Existing brands</h2>\
+                                  <h4 class="text-center w3-border-bottom pb-2">List of brands</h4>\
                                   <div class="d-grid mb-2">\
                                     <div class="form-group mb-2">\
                                       <input type="text" class="form-control new-brand-name" placeholder="New brand name">\
@@ -105,7 +105,7 @@ Offer.prototype.createBrand = function(brandName) {
                                                     <div class="d-flex justify-content-between ">\
                                                       <div>\
                                                         <span class="h1 me-4">' + brandName + '</span>\
-                                                        <a href="javascript:" class="me-2">Import new images</a>\
+                                                        <a href="javascript:" class="me-2 btn-import-item-images">Import new images</a>\
                                                         <a href="javascript:" class="me-2">Delete all items</a>\
                                                         <a href="javascript:" class="me-2">Delete this brand</a>\
                                                         <a href="javascript:" class="me-2">Change brand name</a>\
@@ -126,7 +126,17 @@ Offer.prototype.createBrand = function(brandName) {
   if(self.container.find('li[data-brandname]').length == 1) {
     self.container.find('li[data-brandid="' + brandId + '"] a').click();
   }
+
+  $('div[data-brandid="' + brandId + '"] a.btn-import-item-images').on("click", function() {
+    try {
+      electron.loadImages(self.id, brandId, "ITEM_IMAGE_MODE");
+    } catch (e) {
+      console.log("Load item images is failed. It is web mode.");
+    }
+  });
   return true;
 };
 
-
+Offer.prototype.loadImages = function (brandId, filenames) {
+  
+};

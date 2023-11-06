@@ -23,10 +23,22 @@ function createWindow() {
     slashes: true
   }));
 
+  ipcMain.handle('load_images', (e, params) => {
+    const config = {
+      title: 'Select image files.',
+      buttonLabel: 'Select',
+      filters: [{
+        name: "Image files", extensions: ["jpg", "jpeg", "png"]
+      }],
+      properties: ['openFile', 'multiSelections']
+    };
+    const filenames = dialog.showOpenDialogSync(win, config) || [];
+    e.sender.send('loaded_filenames', {...params, filenames});
+  });
 };
 
 const menutemplate = [
-  /* {
+  {
     label: 'Offerbook',
     submenu: [
       {
@@ -51,7 +63,7 @@ const menutemplate = [
     submenu: [{
       role: "toggleDevTools"
     }]
-  } */
+  }
 ];
 
 const menu = Menu.buildFromTemplate(menutemplate);
