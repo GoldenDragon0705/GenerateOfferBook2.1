@@ -15,12 +15,18 @@ function createWindow() {
       // enableRemoteModule: true,
       // nodeIntegrationInWorker: true,
     }   
-  })
+  });
+
+  win.loadURL(url.format({
+    pathname: path.join(__dirname, 'src/index.html'),
+    protocol: 'file:',
+    slashes: true
+  }));
 
 };
 
 const menutemplate = [
-  {
+  /* {
     label: 'Offerbook',
     submenu: [
       {
@@ -45,7 +51,7 @@ const menutemplate = [
     submenu: [{
       role: "toggleDevTools"
     }]
-  }
+  } */
 ];
 
 const menu = Menu.buildFromTemplate(menutemplate);
