@@ -1,11 +1,13 @@
 // global vars
 
-const inputNewOffername = $('#new_offer_name');
+var inputNewOffername = $('#new_offer_name');
 var btnCreateOffer = $('#btn_create_offer');
 var offersContainer = $('#offer-contents');
 var offersHeader = $('#offer-tabs');
 
 const Offerbook = (function () {
+
+  let offers = {};
 
   const bindBaseEvents = function() {
     inputNewOffername.on("input", function() {
@@ -40,6 +42,17 @@ const Offerbook = (function () {
         inputNewOffername.focus();
       }, 500);
     });
+
+    try {
+      electron.onFilenames(function(params) {
+        const { offerId, brandId, mode, filenames } = params;
+        if(mode === "ITEM_IMAGE_MODE") {
+          offers[offerId].loadedItemImages(brandId, filenames);
+        }
+      });
+    } catch (e) {
+      console.log("Load opened filenames is failed. web mode");
+    }
   };
 
   /**
@@ -56,7 +69,7 @@ const Offerbook = (function () {
     $('#no-offer-alert').hide();
 
     const id = Date.now();
-    new Offer(id, offername);
+    offers[id] = new Offer(id, offername);
   };
 
   return {

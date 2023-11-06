@@ -1,4 +1,4 @@
-$('#btnLoadImages').on('click', () => {
+$('#btn-load-image').on('click', () => {
     const dialogConfig = {
         title : 'Select image files.',
         buttonLabel: 'Select',
@@ -11,5 +11,16 @@ $('#btnLoadImages').on('click', () => {
 });
 
 electron.saveFileNames(filenames => {
-    console.log(filenames);
+    const imgContent = $('.load-image-content');
+    imgContent.append('<h1>123</h1>');
 })
+
+
+const Item = function(offerId, brandId, filenames, symbol = "", price = "", no = "") {
+  this.offerId = offerId;
+  this.brandId = brandId;
+  this.filenames = filenames;
+  this.symbol = symbol;
+  this.price = price;
+  this.no = no;
+};

@@ -9,5 +9,13 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.on("file_names", (event, data) => {
             callback(data);
         })
-    }
+    },
+  loadImages : (offerId, brandId, mode) => {
+    ipcRenderer.invoke('load_images', {offerId, brandId, mode});
+  },
+  onFilenames: (callback) => {
+    ipcRenderer.on('loaded_filenames', (e, params) => {
+      callback(params);
+    });
+  }
 });

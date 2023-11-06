@@ -2,6 +2,7 @@ const Offer = function(id, offername) {
   this.id = id;
   this.offername = offername;
   this.container = $('#' + id);
+  this.brands = {};
   this.init();
 }
 
@@ -23,7 +24,7 @@ Offer.prototype.init = function() {
                             <div class="row">\
                               <div class="col-md-3">\
                                 <div class="w3-card w3-indigo w3-round-large px-2 py-2">\
-                                  <h2 class="text-center w3-border-bottom pb-2">Existing brands</h2>\
+                                  <h4 class="text-center w3-border-bottom pb-2">List of brands</h4>\
                                   <div class="d-grid mb-2">\
                                     <div class="form-group mb-2">\
                                       <input type="text" class="form-control new-brand-name" placeholder="New brand name">\
@@ -74,59 +75,15 @@ Offer.prototype.init = function() {
     btnCreateNewBrand.on("click", function() {
       const brandName = inputNewBrandName.val();
       if(!brandName.length) return;
-      if(self.createBrand(brandName)) inputNewBrandName.val("");
+      const newBrand = new Brand(self.id, brandName);
+      self.brands[newBrand.id] = newBrand;
+      inputNewBrandName.val("");
     });
     
 };
 
-/**
- * create new brand of @brandName
- * @param {*} brandName 
- * @returns 
- */
-Offer.prototype.createBrand = function(brandName) {
-  const self = this;
-  if(self.container.find('[data-brandname="' + brandName + '"]').length) {
-    $.toast({
-      heading: 'Error',
-      text: 'This brand is already exist.',
-      icon: 'error',
-      position: 'top-right',
-    });
-    return false;
-  }
-
-  const brandId = Date.now();
-  self.container.find('.no-brand-alert').hide();
-  self.container.find('.brands-container').append('<li class="list-group-item" data-brandname="' + brandName + '" data-brandid="' + brandId + '">\
-                                                    <a href="javascript:" class="d-block">' + brandName + '</a>\
-                                                  </li>');
-  self.container.find('.items-container').append('<div class="mb-4" data-brandid="' + brandId + '">\
-                                                    <div class="d-flex justify-content-between ">\
-                                                      <div>\
-                                                        <span class="h1 me-4">' + brandName + '</span>\
-                                                        <a href="javascript:" class="me-2">Import new images</a>\
-                                                        <a href="javascript:" class="me-2">Delete all items</a>\
-                                                        <a href="javascript:" class="me-2">Delete this brand</a>\
-                                                        <a href="javascript:" class="me-2">Change brand name</a>\
-                                                      </div>\
-                                                      <div>\
-                                                        <button class="w3-btn w3-ripple w3-teal w3-round-large btn-create-item" data-bs-toggle="modal" data-bs-target="#create-new-item">Create new item</button>\
-                                                      </div>\
-                                                    </div>\
-                                                  </div>');
-
-  self.container.find('.items-container div[data-brandid="' + brandId + '"]').hide();
-
-  self.container.find('li[data-brandid="' + brandId + '"] a').on("click", function() {
-    self.container.find('.items-container div[data-brandid]').hide();
-    self.container.find('.items-container div[data-brandid="' + brandId + '"]').show();
-  });
-  
-  if(self.container.find('li[data-brandname]').length == 1) {
-    self.container.find('li[data-brandid="' + brandId + '"] a').click();
-  }
-  return true;
+Offer.prototype.loadedItemImages = function (brandId, filenames) {
+  this.brands[brandId].addNewItems(filenames.map(function(filename) {
+    return new Item(self.id, brandId, [filename]);
+  }));
 };
-
-
