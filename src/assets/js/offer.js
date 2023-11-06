@@ -29,7 +29,7 @@ Offer.prototype.init = function() {
                                 </div> \
                               </div>\
                             </div>\
-                            <div class="col-md-9">\
+                            <div class="col-md-9 items-container">\
                               <div class="w3-panel w3-dark-gray my-0 no-brand-alert">\
                                 <h3>No brands.</h3>\
                                 <p>Please create a new brand.</p>\
@@ -85,16 +85,35 @@ Offer.prototype.createBrand = function(brandName) {
     });
     return false;
   }
-  self.container.find('.brands-container').append('<li class="list-group-item" data-brandname="' + brandName + '">\
+
+  const brandId = Date.now();
+  self.container.find('.no-brand-alert').hide();
+  self.container.find('.brands-container').append('<li class="list-group-item" data-brandname="' + brandName + '" data-brandid="' + brandId + '">\
                                                     <a href="javascript:" class="d-block">' + brandName + '</a>\
                                                   </li>');
+  self.container.find('.items-container').append('<div class="mb-4" data-brandid="' + brandId + '">\
+                                                    <div class="d-flex justify-content-between ">\
+                                                      <div>\
+                                                        <span class="h1 me-4">' + brandName + '</span>\
+                                                        <a href="javascript:" class="me-2">Import new images</a>\
+                                                        <a href="javascript:" class="me-2">Delete all items</a>\
+                                                        <a href="javascript:" class="me-2">Delete this brand</a>\
+                                                      </div>\
+                                                      <div>\
+                                                        <button class="w3-btn w3-ripple w3-teal w3-round-large btn-create-item" data-bs-toggle="modal" data-bs-target="#create-new-item">Create new item</button>\
+                                                      </div>\
+                                                    </div>\
+                                                  </div>');
 
-  self.container.find('li[data-brandname] a').on("click", function() {
-    
+  self.container.find('.items-container div[data-brandid="' + brandId + '"]').hide();
+
+  self.container.find('li[data-brandid="' + brandId + '"] a').on("click", function() {
+    self.container.find('.items-container div[data-brandid]').hide();
+    self.container.find('.items-container div[data-brandid="' + brandId + '"]').show();
   });
   
   if(self.container.find('li[data-brandname]').length == 1) {
-    self.container.find('li[data-brandname] a').click();
+    self.container.find('li[data-brandid="' + brandId + '"] a').click();
   }
   return true;
 };
