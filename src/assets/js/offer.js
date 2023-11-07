@@ -2,7 +2,6 @@ const Offer = function(id, offername) {
   this.id = id;
   this.offername = offername;
   this.container = $('#' + id);
-  this.brands = {};
   this.init();
 }
 
@@ -75,8 +74,7 @@ Offer.prototype.init = function() {
     btnCreateNewBrand.on("click", function() {
       const brandName = inputNewBrandName.val();
       if(!brandName.length) return;
-      const newBrand = new Brand(self.id, brandName);
-      self.brands[newBrand.id] = newBrand;
+      new Brand(self.id, brandName);
       inputNewBrandName.val("");
     });
     
@@ -85,7 +83,7 @@ Offer.prototype.init = function() {
 Offer.prototype.loadedItemImages = function (brandId, filenames) {
   const self = this;
   const startIndex = Date.now();
-  self.brands[brandId].addNewItems(filenames.map(function(filename, index) {
+  filenames.map(function(filename, index) {
     return new Item(self.id, brandId, [filename], `${self.id}_${brandId}_${startIndex + index}`);
-  }));
+  });
 };

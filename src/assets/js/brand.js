@@ -3,7 +3,6 @@ const Brand = function(offerId, brandName) {
   this.offerId = offerId;
   this.brandName = brandName;
   this.offerContainer = $('#' + offerId);
-  this.items = {};
   this.init();
 };
 
