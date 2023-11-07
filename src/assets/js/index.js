@@ -128,7 +128,7 @@ const Offerbook = (function () {
           let mainFileName = filenames[firstIndex];
           filenames.splice(firstIndex, 1);
           filenames.unshift(mainFileName);
-          offers[offerId].brands[brandId].addNewItems([new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number)]);
+          new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number);
           $('#close-create-item-modal').click();
         });
       });
