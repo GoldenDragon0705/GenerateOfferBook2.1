@@ -50,4 +50,4 @@ const loadItems = new browseItems($('.load-image-content'));
 loadItems.init();
 $('#item').on('click', function() {
     loadItems.createItem();
-});
+}); 

@@ -83,7 +83,9 @@ Offer.prototype.init = function() {
 };
 
 Offer.prototype.loadedItemImages = function (brandId, filenames) {
-  this.brands[brandId].addNewItems(filenames.map(function(filename) {
-    return new Item(self.id, brandId, [filename]);
+  const self = this;
+  const startIndex = Date.now();
+  self.brands[brandId].addNewItems(filenames.map(function(filename, index) {
+    return new Item(self.id, brandId, [filename], `${self.id}_${brandId}_${startIndex + index}`);
   }));
 };
