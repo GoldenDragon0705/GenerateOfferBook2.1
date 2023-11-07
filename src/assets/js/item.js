@@ -12,8 +12,10 @@ const Item = function(offerId, brandId, filenames, id = "", symbol = "", price =
 
 Item.prototype.init = function() {
   const self = this;
-  const offerContainer = $('#' + self.offerId);
   const brandContainer = $('div[data-brandid="' + self.brandId + '"] .item-blocks-container');
+  const brandIndex = $('li[data-brandid="' + self.brandId + '"]').data('brandindex');
+  const itemIndex = $('div[data-brandid="' + self.brandId + '"] .item-blocks-container div.item-block').length + 1;
+  const offerPrefix = $('#' + self.offerId).data('prefix');
   brandContainer.append('<div class="col-md-3 item-block mt-2" data-itemid="' + self.id + '">\
                           <div class="card p-2">\
                             <div class="form-group mb-2">\
@@ -34,4 +36,5 @@ Item.prototype.init = function() {
                       </div>');
   const filename = self.filenames[0].replaceAll("\\", "\/");
   $('[data-itemid="' + self.id + '"] .item-img').css('background-image', 'url(' + filename + ')');
+  $('[data-itemid="' + self.id + '"] input.item-number').val(`${offerPrefix}-${brandIndex}-${itemIndex}`);
 };

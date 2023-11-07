@@ -1,10 +1,10 @@
 // global vars
 
-var inputNewOffername = $('#new_offer_name');
-var btnCreateOffer = $('#btn_create_offer');
-var offersContainer = $('#offer-contents');
-var offersHeader = $('#offer-tabs');
-var imgContent = $('.load-image-content');
+const inputNewOffername = $('#new_offer_name');
+const btnCreateOffer = $('#btn_create_offer');
+const offersContainer = $('#offer-contents');
+const offersHeader = $('#offer-tabs');
+const imgContent = $('.load-image-content');
 
 const Offerbook = (function () {
 
@@ -64,8 +64,8 @@ const Offerbook = (function () {
         const { offerId, brandId, mode, filenames } = params;
         if(mode === "ITEM_IMAGE_MODE") {
           const startIndex = Date.now();
-          filenames.map(function(filename, index) {
-            return new Item(offerId, brandId, [filename], `${offerId}_${brandId}_${startIndex + index}`);
+          filenames.forEach(function(filename, index) {
+            new Item(offerId, brandId, [filename], `${offerId}_${brandId}_${startIndex + index}`);
           });
         }
       });

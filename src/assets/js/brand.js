@@ -18,9 +18,9 @@ Brand.prototype.init = function() {
     });
     return false;
   }
-
+  const brandIndex = self.offerContainer.find('.brands-container li').length + 1;
   self.offerContainer.find('.no-brand-alert').hide();
-  self.offerContainer.find('.brands-container').append('<li class="list-group-item" data-brandname="' + self.brandName + '" data-brandid="' + self.id + '">\
+  self.offerContainer.find('.brands-container').append('<li class="list-group-item" data-brandname="' + self.brandName + '" data-brandid="' + self.id + '" data-brandindex="' + brandIndex + '">\
                                                     <a href="javascript:" class="d-block">' + self.brandName + '</a>\
                                                   </li>');
   self.offerContainer.find('.items-container').append('<div class="mb-4" data-brandid="' + self.id + '">\

@@ -1,7 +1,12 @@
+const btnSaveOfferSetting = $('#btn_save_offer_setting');
+const inputUpdateOfferName = $('#update_offer_name');
+const inputUpdatePrefix = $('#prefix_item_number');
+
 const Offer = function(id, offername) {
   this.id = id;
   this.offername = offername;
   this.container = $('#' + id);
+  this.prefix = 0;
   this.init();
 }
 
@@ -12,13 +17,13 @@ Offer.prototype.init = function() {
   offersHeader.append('<li class="nav-item">\
                               <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '">' + self.offername + ' *</a>\
                             </li>');
-  offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel">\
+  offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel" data-prefix="' + self.prefix + '">\
                               <div class="offer-actions-bar mt-2 mb-3 p-3 d-flex border rounded">\
-                                <a href="" class="me-4"><i class="fa fa-save"></i> Save this offer</a>\
-                                <a href="" class="me-4"><i class="fa fa-file-word-o"></i> Generate docx</a>\
-                                <a href="" class="me-auto"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
-                                <a href="" class="me-4"><i class="fa fa-cog"></i> Setting</a>\
-                                <a href="" >Close</a>\
+                                <a href="javascript:" class="me-4"><i class="fa fa-save"></i> Save this offer</a>\
+                                <a href="javascript:" class="me-4"><i class="fa fa-file-word-o"></i> Generate docx</a>\
+                                <a href="javascript:" class="me-auto"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
+                                <a href="javascript:" class="me-4"  data-bs-toggle="modal" data-bs-target="#setting-offer"><i class="fa fa-cog"></i> Setting</a>\
+                                <a href="javascript:" >Close</a>\
                               </div>\
                             <div class="row">\
                               <div class="col-md-3">\
@@ -63,7 +68,7 @@ Offer.prototype.init = function() {
     const btnCreateNewBrand = newContainer.find('.btn-create-new-brand');
     inputNewBrandName.on('input', function() {
       const value = $(this).val();
-      btnCreateNewBrand.prop('disabeld', value.length?false:true);
+      btnCreateNewBrand.prop('disabled', value.length?false:true);
     });
 
     inputNewBrandName.on("keypress", function(e) {
@@ -77,6 +82,32 @@ Offer.prototype.init = function() {
       new Brand(self.id, brandName);
       inputNewBrandName.val("");
     });
+
+    newContainer.find('[data-bs-target="#setting-offer"]').on("click", function() {
+      inputUpdateOfferName.val(self.offername);
+      inputUpdatePrefix.val(self.prefix);
+      btnSaveOfferSetting.off("click");
+      btnSaveOfferSetting.on("click", function() {
+        const newOffername = inputUpdateOfferName.val();
+        const newPrefix = inputUpdatePrefix.val();
+        if(!newOffername.length || !newPrefix.length) {
+          $.toast({
+            heading: 'Invalid input',
+            text: 'Input correct values.',
+            icon: 'warning',
+            position: 'top-right',
+          });
+          return ;
+        }
+
+        $('a.nav-link[href="#' + self.id + '"]').html(`${newOffername} *`);
+        $('#' + self.id).data('prefix', newPrefix);
+        self.prefix = newPrefix;
+        $('#setting-offer button[data-bs-dismiss]').click();
+        // update number of items
+        self.updateNumbers();
+      });
+    });
     
 };
 
@@ -85,5 +116,18 @@ Offer.prototype.loadedItemImages = function (brandId, filenames) {
   const startIndex = Date.now();
   filenames.map(function(filename, index) {
     return new Item(self.id, brandId, [filename], `${self.id}_${brandId}_${startIndex + index}`);
+  });
+};
+
+Offer.prototype.updateNumbers = function() {
+  const self = this;
+  self.container.find('div[data-brandid]').each(function(index) {
+    const brandId = $(this).data('brandid');
+    index++;
+    $('li[data-brandid="' + brandId + '"]').data('brandindex', index);
+    $(this).find('.item-block[data-itemid]').each(function(itemIndex) {
+      itemIndex++;
+      $(this).find('input.item-number').val(`${self.prefix}-${index}-${itemIndex}`);
+    });
   });
 };
