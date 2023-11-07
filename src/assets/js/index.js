@@ -4,10 +4,12 @@ var inputNewOffername = $('#new_offer_name');
 var btnCreateOffer = $('#btn_create_offer');
 var offersContainer = $('#offer-contents');
 var offersHeader = $('#offer-tabs');
+var imgContent = $('.load-image-content');
 
 const Offerbook = (function () {
 
   let offers = {};
+  let filenames = [];
 
   const bindBaseEvents = function() {
     inputNewOffername.on("input", function() {
@@ -43,6 +45,20 @@ const Offerbook = (function () {
       }, 500);
     });
 
+    $('#btn-load-image').on('click', () => {
+			const dialogConfig = {
+				title : 'Select image files.',
+				buttonLabel: 'Select',
+				filters: [{
+					name: "Image files", extensions: ["jpg", "jpeg", "png"]
+				}],
+				properties: ['openFile', 'multiSelections']
+			};
+			electron.openDialog('showOpenDialogSync', dialogConfig);
+		});
+
+    
+
     try {
       electron.onFilenames(function(params) {
         const { offerId, brandId, mode, filenames } = params;
@@ -52,6 +68,69 @@ const Offerbook = (function () {
             return new Item(offerId, brandId, [filename], `${offerId}_${brandId}_${startIndex + index}`);
           });
         }
+      });
+
+      electron.saveFileNames(filenames => {
+        filenames = filenames;
+        if(filenames.length > 0){
+          $('button#item').prop('disabled', false);
+        }
+        
+        filenames.forEach((filename, index) => {
+          filename = filename.replaceAll('\\', '\/');
+          if(index == 0){
+            imgContent.append(`<div class="w3-third my-1" choosed-main-image="true">
+                                <div class="w3-card">
+                                  <div class="goods-image-wrapper main-image-border">
+                                    <img src="${filename}" class="goods-image">
+                                    <div class="main-image-checked d-block">
+                                      <i class="fa fa-check"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>`);
+          }else{
+            imgContent.append(`<div class="w3-third my-1" choosed-main-image="false">
+                                      <div class="w3-card">
+                                        <div class="goods-image-wrapper">
+                                          <img src="${filename}" class="goods-image">
+                                          <div class="main-image-checked d-none">
+                                            <i class="fa fa-check"></i>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>`);
+          }
+        });
+        $('.goods-image-wrapper').on('click', (e) => {
+          $('.main-image-checked').removeClass('d-block').addClass('d-none');
+          $('.goods-image-wrapper').removeClass('main-image-border');
+          $(e.target).siblings('div').removeClass('d-none').addClass('d-block');
+          $(e.target).parent().addClass('main-image-border');
+          $('.w3-third[choosed-main-image]').attr('choosed-main-image', "false");
+          $(e.target).parent().parent().parent().attr('choosed-main-image', "true");
+        });
+        $('button#item').on('click', function() {
+          const goods_number = $('input[name="goods-number"]').val();
+          const goods_symbol = $('input[name="goods-symbol"]').val();
+          const goods_price = $('input[name="goods-price"]').val();
+          const offerId = $('#current-offer-id').val();
+          const brandId = $('#current-brand-id').val();
+          const imageCards = $('div[choosed-main-image]');
+          let firstIndex;
+          imageCards.each(function(index, imageCard) {
+            if($(imageCard).attr('choosed-main-image') == "true")
+            {
+              firstIndex = index;
+              return;
+            }
+          });
+          let mainFileName = filenames[firstIndex];
+          filenames.splice(firstIndex, 1);
+          filenames.unshift(mainFileName);
+          offers[offerId].brands[brandId].addNewItems([new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number)]);
+          $('#close-create-item-modal').click();
+        });
       });
     } catch (e) {
       console.log("Load opened filenames is failed. web mode");
@@ -74,6 +153,7 @@ const Offerbook = (function () {
     const id = Date.now();
     offers[id] = new Offer(id, offername);
   };
+
 
   return {
     init : function() {
