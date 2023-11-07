@@ -3,6 +3,7 @@ const Brand = function(offerId, brandName) {
   this.offerId = offerId;
   this.brandName = brandName;
   this.offerContainer = $('#' + offerId);
+  this.items = {};
   this.init();
 };
 
@@ -23,19 +24,23 @@ Brand.prototype.init = function() {
                                                     <a href="javascript:" class="d-block">' + self.brandName + '</a>\
                                                   </li>');
   self.offerContainer.find('.items-container').append('<div class="mb-4" data-brandid="' + self.id + '">\
-                                                    <div class="d-flex justify-content-between ">\
-                                                      <div>\
-                                                        <span class="h1 me-4">' + self.brandName + '</span>\
-                                                        <a href="javascript:" class="me-2 btn-import-item-images">Import new images</a>\
-                                                        <a href="javascript:" class="me-2">Delete all items</a>\
-                                                        <a href="javascript:" class="me-2">Delete this brand</a>\
-                                                        <a href="javascript:" class="me-2">Change brand name</a>\
-                                                      </div>\
-                                                      <div>\
-                                                        <button class="w3-btn w3-ripple w3-teal w3-round-large btn-create-item" data-bs-toggle="modal" data-bs-target="#create-new-item">Create new item</button>\
-                                                      </div>\
-                                                    </div>\
-                                                  </div>');
+                                                        <div class="d-flex justify-content-between mb-3">\
+                                                          <div>\
+                                                            <span class="h1 me-4">' + self.brandName + '</span>\
+                                                            <a href="javascript:" class="me-2 btn-import-item-images">Import new images</a>\
+                                                            <a href="javascript:" class="me-2">Delete all items</a>\
+                                                            <a href="javascript:" class="me-2">Delete this brand</a>\
+                                                            <a href="javascript:" class="me-2">Change brand name</a>\
+                                                          </div>\
+                                                          <div>\
+                                                            <button class="w3-btn w3-ripple w3-teal w3-round-large btn-create-item" data-bs-toggle="modal" data-bs-target="#create-new-item">Create new item</button>\
+                                                          </div>\
+                                                        </div>\
+                                                        <div class="container-fluid">\
+                                                          <div class="item-blocks-container row">\
+                                                          </div>\
+                                                        </div>\
+                                                      </div>');
 
   self.offerContainer.find('.items-container div[data-brandid="' + self.id + '"]').hide();
 
@@ -58,6 +63,6 @@ Brand.prototype.init = function() {
 };
 
 Brand.prototype.addNewItems = function(items) {
-  console.log(items);
+  
 };
 

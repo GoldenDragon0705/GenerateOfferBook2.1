@@ -13,3 +13,23 @@ body {
 .offer-actions-bar a:hover {
   text-decoration: underline;
 }
+
+.item-block .item-img {
+  width: 100%;
+  padding-top: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid gray;
+}
+
+.item-block input.form-control {
+  border: 0;
+  border-radius: 0;
+  border-bottom: 1px solid gray;
+  outline: 0;
+}
+
+.item-block input.form-control:focus {
+  box-shadow: none;
+}

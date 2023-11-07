@@ -24,13 +24,13 @@ Offer.prototype.init = function() {
                             <div class="row">\
                               <div class="col-md-3">\
                                 <div class="w3-card w3-indigo w3-round-large px-2 py-2">\
-                                  <h4 class="text-center w3-border-bottom pb-2">List of brands</h4>\
                                   <div class="d-grid mb-2">\
                                     <div class="form-group mb-2">\
                                       <input type="text" class="form-control new-brand-name" placeholder="New brand name">\
                                     </div>\
                                     <button class="w3-btn w3-ripple w3-blue w3-round-large btn-block btn-create-new-brand">Create new brand</button>\
                                   </div> \
+                                  <h3 class="text-center w3-border-bottom pb-2 mt-2">List of brands</h3>\
                                   <div>\
                                     <ul class="list-group list-group-flush bg-transparent brands-container">\
                                     </ul>\
