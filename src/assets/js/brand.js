@@ -1,3 +1,4 @@
+
 const Brand = function(offerId, brandName) {
   this.id = Date.now();
   this.offerId = offerId;
@@ -49,6 +50,8 @@ Brand.prototype.init = function() {
     $('input[name="goods-symbol"]').val("");
     $('input[name="goods-price"]').val("");
     $('.load-image-content').empty();
+    $('#current-brand-id').val(self.id);
+    $('#current-offer-id').val(self.offerId);
   });
   
   if(self.offerContainer.find('li[data-brandname]').length == 1) {

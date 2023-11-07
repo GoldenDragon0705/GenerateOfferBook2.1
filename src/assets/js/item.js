@@ -1,6 +1,4 @@
 
-
-
 const Item = function(offerId, brandId, filenames, symbol = "", price = "", no = "") {
   this.offerId = offerId;
   this.brandId = brandId;
