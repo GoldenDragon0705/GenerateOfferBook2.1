@@ -75,16 +75,29 @@ const Offerbook = (function () {
         
         filenames.forEach((filename, index) => {
           filename = filename.replaceAll('\\', '\/');
-          imgContent.append(`<div class="w3-third my-1" choosed-main-image="false">
-                                    <div class="w3-card">
-                                      <div class="goods-image-wrapper">
-                                        <img src="${filename}" class="goods-image">
-                                        <div class="main-image-checked d-none">
-                                          <i class="fa fa-check"></i>
+          if(index == 0){
+            imgContent.append(`<div class="w3-third my-1" choosed-main-image="true">
+                                <div class="w3-card">
+                                  <div class="goods-image-wrapper main-image-border">
+                                    <img src="${filename}" class="goods-image">
+                                    <div class="main-image-checked d-block">
+                                      <i class="fa fa-check"></i>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>`);
+          }else{
+            imgContent.append(`<div class="w3-third my-1" choosed-main-image="false">
+                                      <div class="w3-card">
+                                        <div class="goods-image-wrapper">
+                                          <img src="${filename}" class="goods-image">
+                                          <div class="main-image-checked d-none">
+                                            <i class="fa fa-check"></i>
+                                          </div>
                                         </div>
                                       </div>
-                                    </div>
-                                  </div>`);
+                                    </div>`);
+          }
         });
         $('.goods-image-wrapper').on('click', (e) => {
           $('.main-image-checked').removeClass('d-block').addClass('d-none');
@@ -112,7 +125,8 @@ const Offerbook = (function () {
           let mainFileName = filenames[firstIndex];
           filenames.splice(firstIndex, 1);
           filenames.unshift(mainFileName);
-          createNewItem(new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number));
+          offers[offerId].brands[brandId].addNewItems([new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number)]);
+          $('#close-create-item-modal').click();
         });
       });
     } catch (e) {
@@ -137,9 +151,6 @@ const Offerbook = (function () {
     offers[id] = new Offer(id, offername);
   };
 
-  const createNewItem = function(item) {
-    console.log(item);
-  }
 
   return {
     init : function() {
