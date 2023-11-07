@@ -43,6 +43,13 @@ Brand.prototype.init = function() {
     self.offerContainer.find('.items-container div[data-brandid]').hide();
     self.offerContainer.find('.items-container div[data-brandid="' + self.id + '"]').show();
   });
+
+  self.offerContainer.find('button[data-bs-target="#create-new-item"]').on('click', function(){
+    $('input[name="goods-number"]').val("");
+    $('input[name="goods-symbol"]').val("");
+    $('input[name="goods-price"]').val("");
+    $('.load-image-content').empty();
+  });
   
   if(self.offerContainer.find('li[data-brandname]').length == 1) {
     self.offerContainer.find('li[data-brandid="' + self.id + '"] a').click();

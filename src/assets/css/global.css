@@ -13,3 +13,41 @@ body {
 .offer-actions-bar a:hover {
   text-decoration: underline;
 }
+
+
+.goods-image-wrapper {
+  position: relative;
+}
+
+.goods-image-wrapper img.goods-image {
+  opacity: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: .3s ease;
+}
+
+.main-image-checked {
+  transition: .3s ease;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.goods-image-wrapper:hover .goods-image {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.main-image-checked i {
+  font-size: 36px;
+}
+
+.main-image-border {
+  outline: 2px solid white;
+  outline-offset: -2px;
+}
