@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron
 const url = require('url')
 const path = require('path');
 const { param } = require('jquery');
+const PdfModule = require('./src/modules/pdf.module');
 let win;
 
 function createWindow() {
@@ -40,6 +41,20 @@ function createWindow() {
     };
     const filenames = dialog.showOpenDialogSync(win, config) || [];
     e.sender.send('loaded_filenames', {...params, filenames});
+  });
+
+  ipcMain.handle('save_pdf_dialog', (e, data) => {
+    const config = {
+      title: 'Select path for save.',
+      buttonLabel: 'Save',
+      properties: ['saveFile'],
+      filters: [{
+        name: "PDF file", extensions: ["pdf"]
+      }, { name: 'All Files', extensions: ['*'] }]
+    };
+    const filename = dialog.showSaveDialogSync(config);
+    const pdfResult = PdfModule.generate(data, filename);
+    e.sender.send("generated_pdf", pdfResult);
   });
 };
 

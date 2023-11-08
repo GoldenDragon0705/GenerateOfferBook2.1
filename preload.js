@@ -25,6 +25,10 @@ contextBridge.exposeInMainWorld('electron', {
     onFilenames: (callback) => {
       ipcRenderer.on('loaded_filenames', (e, params) => {
         callback(params);
-    });
-  }
+      });
+    },
+    // open savefiledialog
+    savePdfDialog : (data) => {
+      ipcRenderer.invoke('save_pdf_dialog', data);
+    }
 });

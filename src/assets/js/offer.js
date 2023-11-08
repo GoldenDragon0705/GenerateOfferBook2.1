@@ -119,6 +119,13 @@ Offer.prototype.init = function() {
           position: 'bottom-right',
         });
       }
+      
+      // save dialog
+      try {
+        electron.savePdfDialog(self.getOfferData());
+      } catch (e) {
+        console.log("Opening savedialog is failed. This is web mode.");
+      }
     });
     
 };
@@ -150,10 +157,9 @@ Offer.prototype.getOfferData = function() {
     id: self.id,
     name : self.offername,
     prefix : self.prefix,
-    data : {}
+    brands : []
   };
   let brand = {};
-  let brands = {};
   self.container.find('li[data-brandid]').each(function() {
     brand = {
       brandId : $(this).data('brandid'),
@@ -167,10 +173,14 @@ Offer.prototype.getOfferData = function() {
       const no = $(this).find('input.item-number').val();
       const symbol = $(this).find('input.item-symbol').val();
       const price = $(this).find('input.item-price').val();
-      brand.items.push({ itemId, no, symbol, price });
+      let filenames = [];
+      $(this).find('div.hidden-item-filenames').each(function() {
+        filenames.push($(this).data('item-filenames'));
+      });
+      brand.items.push({ itemId, no, symbol, price, filenames });
     });
-    brands[brand.brandId] = brand;
+    offerData.brands.push(brand);
   });
-  offerData.data = brands;
+  
   return offerData;
 };
