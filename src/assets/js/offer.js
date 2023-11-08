@@ -21,7 +21,7 @@ Offer.prototype.init = function() {
                               <div class="offer-actions-bar mt-2 mb-3 p-3 d-flex border rounded">\
                                 <a href="javascript:" class="me-4"><i class="fa fa-save"></i> Save this offer</a>\
                                 <a href="javascript:" class="me-4"><i class="fa fa-file-word-o"></i> Generate docx</a>\
-                                <a href="javascript:" class="me-auto"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
+                                <a href="javascript:" class="me-auto btn_gen_pdf"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
                                 <a href="javascript:" class="me-4"  data-bs-toggle="modal" data-bs-target="#setting-offer"><i class="fa fa-cog"></i> Setting</a>\
                                 <a href="javascript:" >Close</a>\
                               </div>\
@@ -95,7 +95,7 @@ Offer.prototype.init = function() {
             heading: 'Invalid input',
             text: 'Input correct values.',
             icon: 'warning',
-            position: 'top-right',
+            position: 'bottom-right',
           });
           return ;
         }
@@ -107,6 +107,18 @@ Offer.prototype.init = function() {
         // update number of items
         self.updateNumbers();
       });
+    });
+
+
+    newContainer.find('a.btn_gen_pdf').on("click", function() {
+      if(!newContainer.find('.item-block').length) {
+        return $.toast({
+          heading: 'No items to generate pdf',
+          text: 'Please create brands and items.',
+          icon: 'warning',
+          position: 'bottom-right',
+        });
+      }
     });
     
 };
@@ -130,4 +142,35 @@ Offer.prototype.updateNumbers = function() {
       $(this).find('input.item-number').val(`${self.prefix}-${index}-${itemIndex}`);
     });
   });
+};
+
+Offer.prototype.getOfferData = function() {
+  const self = this;
+  let offerData = {
+    id: self.id,
+    name : self.offername,
+    prefix : self.prefix,
+    data : {}
+  };
+  let brand = {};
+  let brands = {};
+  self.container.find('li[data-brandid]').each(function() {
+    brand = {
+      brandId : $(this).data('brandid'),
+      brandName : $(this).data('brandname'),
+      brandIndex : $(this).data('brandindex'),
+      items : []
+    };
+
+    $('div[data-brandid] .item-block').each(function() {
+      const itemId = $(this).data('itemid');
+      const no = $(this).find('input.item-number').val();
+      const symbol = $(this).find('input.item-symbol').val();
+      const price = $(this).find('input.item-price').val();
+      brand.items.push({ itemId, no, symbol, price });
+    });
+    brands[brand.brandId] = brand;
+  });
+  offerData.data = brands;
+  return offerData;
 };

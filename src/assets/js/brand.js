@@ -14,7 +14,7 @@ Brand.prototype.init = function() {
       heading: 'Error',
       text: 'This brand is already exist.',
       icon: 'error',
-      position: 'top-right',
+      position: 'bottom-right',
     });
     return false;
   }
