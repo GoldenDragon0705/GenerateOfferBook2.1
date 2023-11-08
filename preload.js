@@ -30,5 +30,10 @@ contextBridge.exposeInMainWorld('electron', {
     // open savefiledialog
     savePdfDialog : (data) => {
       ipcRenderer.invoke('save_pdf_dialog', data);
+    },
+    onPdfFileSave: (callback) => {
+      ipcRenderer.on("generated_pdf", (event, data) => {
+        callback(data);
+      });
     }
 });

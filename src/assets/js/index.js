@@ -105,6 +105,17 @@ const Offerbook = (function () {
 
 
       });
+
+      electron.onPdfFileSave(result => {
+        if(result) {
+          return $.toast({
+            heading: 'Success.',
+            text: 'Pdf file is saved successfully.',
+            icon: 'success',
+            position: 'bottom-right',
+          });
+        }
+      });
     } catch (e) {
       console.log("Load opened filenames is failed. web mode");
     }
