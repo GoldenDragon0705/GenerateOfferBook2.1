@@ -57,8 +57,6 @@ const Offerbook = (function () {
 			electron.openDialog('showOpenDialogSync', dialogConfig);
 		});
 
-    
-
     try {
       electron.onFilenames(function(params) {
         const { offerId, brandId, mode, filenames } = params;
@@ -73,50 +71,22 @@ const Offerbook = (function () {
       electron.saveFileNames(filenames => {
         filenames = filenames;
         if(filenames.length > 0){
-          $('button#item').prop('disabled', false);
+          $('#btn-create-item').prop('disabled', false);
         }
-        
-        filenames.forEach((filename, index) => {
-          filename = filename.replaceAll('\\', '\/');
-          if(index == 0){
-            imgContent.append(`<div class="w3-third my-1" choosed-main-image="true">
-                                <div class="w3-card">
-                                  <div class="goods-image-wrapper main-image-border">
-                                    <img src="${filename}" class="goods-image">
-                                    <div class="main-image-checked d-block">
-                                      <i class="fa fa-check"></i>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>`);
-          }else{
-            imgContent.append(`<div class="w3-third my-1" choosed-main-image="false">
-                                      <div class="w3-card">
-                                        <div class="goods-image-wrapper">
-                                          <img src="${filename}" class="goods-image">
-                                          <div class="main-image-checked d-none">
-                                            <i class="fa fa-check"></i>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>`);
-          }
+
+        ItemRelatives().renderFromImages(filenames, imgContent, true);
+
+        $('.load-image-content .goods-image-wrapper').on('click', (e) => {
+          ItemRelatives().itemChecking(e);
         });
-        $('.goods-image-wrapper').on('click', (e) => {
-          $('.main-image-checked').removeClass('d-block').addClass('d-none');
-          $('.goods-image-wrapper').removeClass('main-image-border');
-          $(e.target).siblings('div').removeClass('d-none').addClass('d-block');
-          $(e.target).parent().addClass('main-image-border');
-          $('.w3-third[choosed-main-image]').attr('choosed-main-image', "false");
-          $(e.target).parent().parent().parent().attr('choosed-main-image', "true");
-        });
-        $('button#item').on('click', function() {
+        $('#btn-create-item').off('click');
+        $('#btn-create-item').on('click', function() {
           const goods_number = $('input[name="goods-number"]').val();
           const goods_symbol = $('input[name="goods-symbol"]').val();
           const goods_price = $('input[name="goods-price"]').val();
           const offerId = $('#current-offer-id').val();
           const brandId = $('#current-brand-id').val();
-          const imageCards = $('div[choosed-main-image]');
+          const imageCards = $('.load-image-content div[choosed-main-image]');
           let firstIndex;
           imageCards.each(function(index, imageCard) {
             if($(imageCard).attr('choosed-main-image') == "true")
@@ -128,13 +98,84 @@ const Offerbook = (function () {
           let mainFileName = filenames[firstIndex];
           filenames.splice(firstIndex, 1);
           filenames.unshift(mainFileName);
-          new Item(offerId,brandId,filenames, goods_symbol, goods_price, goods_number);
+          const id = `${offerId}_${brandId}_${Date.now()}`;
+          new Item(offerId,brandId,filenames, id, goods_symbol, goods_price, goods_number);
           $('#close-create-item-modal').click();
         });
+
+
       });
     } catch (e) {
       console.log("Load opened filenames is failed. web mode");
     }
+
+    $('#btn-change-image').on('click', () => {
+      const dialogConfig = {
+        title : 'Select image files.',
+        buttonLabel: 'Select',
+        filters: [{
+          name: "Image files", extensions: ["jpg", "jpeg", "png"]
+        }],
+        properties: ['openFile', 'multiSelections']
+      };
+      electron.openDialog('showOpenDialogSync', dialogConfig);
+    });
+
+    try{
+      let modalFileNames = [];
+      const changeImageContent = $('.load-image-edit-content');
+      electron.saveFileNames(filenames => {
+        modalFileNames = modalFileNames = $('#edit-current-item div.hidden-filenames').attr('data-filenames').split(",");
+        ItemRelatives().renderFromImages(filenames, changeImageContent, false);
+        filenames.map((filename, index) => {
+          return modalFileNames.push(filename);
+        })
+        console.log(modalFileNames);
+        $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
+          ItemRelatives().itemChecking(e);
+        });
+
+        $('#edit-current-item div.hidden-filenames').attr('data-filenames', modalFileNames);
+      });
+    }catch(e){
+      console.log(e);
+    }
+
+    $('#btn-edit-item').on('click', function() {
+      const goods_number = $('input[name="goods-edit-number"]').val();
+      const goods_symbol = $('input[name="goods-edit-symbol"]').val();
+      const goods_price = $('input[name="goods-edit-price"]').val();
+      const offerId = $('input[name="goods-edit-itemOfferId"]').attr("value");
+      const brandId = $('input[name="goods-edit-itemBrandId"]').attr("value");
+      const id = $('input[name="goods-edit-itemId"]').attr("value");
+
+      let modalFileNames = $('.hidden-filenames').attr('data-filenames').split(',');
+      
+      const imageCards = $('.load-image-edit-content div[choosed-main-image]');
+      let firstIndex;
+      imageCards.each(function(index, imageCard) {
+        if($(imageCard).attr('choosed-main-image') == "true")
+        {
+          firstIndex = index;
+          return;
+        }
+      });
+      
+
+      let mainFileName = modalFileNames[firstIndex];
+      modalFileNames.splice(firstIndex, 1);
+      modalFileNames.unshift(mainFileName);
+      
+      const item = $(`[data-itemid="${id}"]`);
+      item.find('input.item-number').val(goods_number);
+      item.find('input.item-symbol').val(goods_symbol);
+      item.find('input.item-price').val(goods_price);
+
+      item.find('div.hidden-item-filenames').attr('data-item-filenames', modalFileNames);
+      item.find('div.item-img').css('background-image', 'url(' + modalFileNames[0].replaceAll('\\', '\/') + ')');
+
+      $('#close-edit-item-modal').click();
+    });
   };
 
   /**
