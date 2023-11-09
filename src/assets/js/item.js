@@ -24,7 +24,7 @@ Item.prototype.init = function() {
                                 <input type="text" class="form-control text-center item-number">\
                             </div>\
                             <div class="item-img"></div>\
-                            <div class="hidden-item-filenames" data-item-fileNames="" hidden></div>\
+                            <div class="hidden-item-filenames" data-item-filenames="" hidden></div>\
                             <div class="form-group mt-2">\
                                 <input type="text" class="form-control item-symbol" placeholder="Symbol: ">\
                             </div>\
@@ -39,7 +39,7 @@ Item.prototype.init = function() {
                       </div>');
   const filename = self.filenames[0].replaceAll("\\", "\/");
   $('[data-itemid="' + self.id + '"] .item-img').css('background-image', 'url(' + filename + ')');
-  $('[data-itemid="' + self.id + '"] .hidden-item-filenames').attr('data-item-filenames', self.filenames);
+  $('[data-itemid="' + self.id + '"] .hidden-item-filenames').data('item-filenames', self.filenames);
   
 
   if(self.no == ""){

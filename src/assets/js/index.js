@@ -141,7 +141,7 @@ const Offerbook = (function () {
         filenames.map((filename, index) => {
           return modalFileNames.push(filename);
         })
-        console.log(modalFileNames);
+        
         $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
           ItemRelatives().itemChecking(e);
         });

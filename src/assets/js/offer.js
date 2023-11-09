@@ -180,6 +180,7 @@ Offer.prototype.getOfferData = function() {
       brand.items.push({ itemId, no, symbol, price, filenames });
     });
     offerData.brands.push(brand);
+    console.log(offerData);
   });
   
   return offerData;
