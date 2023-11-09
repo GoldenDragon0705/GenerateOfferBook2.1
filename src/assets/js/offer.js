@@ -174,14 +174,13 @@ Offer.prototype.getOfferData = function() {
       const symbol = $(this).find('input.item-symbol').val();
       const price = $(this).find('input.item-price').val();
       let filenames = [];
-      $(this).find('div.hidden-item-filenames').each(function() {
-        filenames.push($(this).data('item-filenames'));
+      $(this).find('div.hidden-item-filename').each(function() {
+        filenames.push($(this).data('item-filename'));
       });
       brand.items.push({ itemId, no, symbol, price, filenames });
     });
     offerData.brands.push(brand);
-    console.log(offerData);
   });
-  
+  console.log(offerData);
   return offerData;
 };

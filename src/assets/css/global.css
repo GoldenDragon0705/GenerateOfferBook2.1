@@ -66,3 +66,7 @@
   outline: 2px solid white;
   outline-offset: -2px;
 }
+
+.hidden-item-filename {
+  display: none;
+}
