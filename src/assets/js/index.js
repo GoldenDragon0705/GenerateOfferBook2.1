@@ -125,7 +125,7 @@ const Offerbook = (function () {
       let modalFileNames = [];
       const changeImageContent = $('.load-image-edit-content');
       electron.saveFileNames(filenames => {
-        modalFileNames = modalFileNames = $('#edit-current-item div.hidden-filenames').attr('data-filenames').split(",");
+        modalFileNames = $('#edit-current-item div.hidden-filenames').attr('data-filenames').split(",");
         ItemRelatives().renderFromImages(filenames, changeImageContent, false);
         filenames.map((filename, index) => {
           return modalFileNames.push(filename);
