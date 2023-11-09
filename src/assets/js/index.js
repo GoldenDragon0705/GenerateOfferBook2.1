@@ -66,6 +66,30 @@ const Offerbook = (function () {
             new Item(offerId, brandId, [filename], `${offerId}_${brandId}_${startIndex + index}`);
           });
         }
+        else if(mode === "ITEM_CHANGE_MODE"){
+          let modalFileNames = [];
+          $('#edit-current-item div.hidden-filename').each(function() {
+            modalFileNames.push($(this).data('filename'));
+          });
+
+          const changeImageContent = $('#edit-current-item .load-image-edit-content');
+          
+          ItemRelatives().renderFromImages(filenames, changeImageContent, false);
+          filenames.map((filename, index) => {
+            return modalFileNames.push(filename);
+          });
+          
+          $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
+            ItemRelatives().itemChecking(e);
+          });
+
+          $('#edit-current-item .hidden-filename').remove();
+
+          modalFileNames.forEach(function(modalFileName) {
+            $('#edit-current-item .item-block').append('<div class="hidden-filename"></div>')
+            $('#edit-current-item .item-block .hidden-filename:last').data('filename', modalFileName);
+          });
+        }
       });
 
       electron.saveFileNames(filenames => {
@@ -73,37 +97,54 @@ const Offerbook = (function () {
         if(filenames.length > 0){
           $('#btn-create-item').prop('disabled', false);
         }
+        
+        const newImport = $('#create-new-item .item-block .hidden-create-item').length;
 
-        ItemRelatives().renderFromImages(filenames, imgContent, true);
+        filenames.forEach(function(filename) {
+          $('#create-new-item .item-block').append(`<div class="hidden-create-item" data-create-item="${filename}"></div>`);
+        });
+
+
+        if(newImport == 0)
+        {
+          ItemRelatives().renderFromImages(filenames, imgContent, true);
+        }
+        else{
+          ItemRelatives().renderFromImages(filenames, imgContent, false);
+        }
+
 
         $('.load-image-content .goods-image-wrapper').on('click', (e) => {
           ItemRelatives().itemChecking(e);
         });
-        $('#btn-create-item').off('click');
-        $('#btn-create-item').on('click', function() {
-          const goods_number = $('input[name="goods-number"]').val();
-          const goods_symbol = $('input[name="goods-symbol"]').val();
-          const goods_price = $('input[name="goods-price"]').val();
-          const offerId = $('#current-offer-id').val();
-          const brandId = $('#current-brand-id').val();
-          const imageCards = $('.load-image-content div[choosed-main-image]');
-          let firstIndex;
-          imageCards.each(function(index, imageCard) {
-            if($(imageCard).attr('choosed-main-image') == "true")
-            {
-              firstIndex = index;
-              return;
-            }
-          });
-          let mainFileName = filenames[firstIndex];
-          filenames.splice(firstIndex, 1);
-          filenames.unshift(mainFileName);
-          const id = `${offerId}_${brandId}_${Date.now()}`;
-          new Item(offerId,brandId,filenames, id, goods_symbol, goods_price, goods_number);
-          $('#close-create-item-modal').click();
+
+      });
+
+      $('#btn-create-item').on('click', function() {
+        const goods_number = $('input[name="goods-number"]').val();
+        const goods_symbol = $('input[name="goods-symbol"]').val();
+        const goods_price = $('input[name="goods-price"]').val();
+        const offerId = $('#current-offer-id').val();
+        const brandId = $('#current-brand-id').val();
+        const imageCards = $('.load-image-content div[choosed-main-image]');
+        let firstIndex;
+        imageCards.each(function(index, imageCard) {
+          if($(imageCard).attr('choosed-main-image') == "true")
+          {
+            firstIndex = index;
+            return;
+          }
         });
-
-
+        let filenames = [];
+        $('#create-new-item .item-block .hidden-create-item').each(function() {
+          filenames.push($(this).attr('data-create-item'));
+        });
+        let mainFileName = filenames[firstIndex];
+        filenames.splice(firstIndex, 1);
+        filenames.unshift(mainFileName);
+        const id = `${offerId}_${brandId}_${Date.now()}`;
+        new Item(offerId,brandId,filenames, id, goods_symbol, goods_price, goods_number);
+        $('#close-create-item-modal').click();
       });
 
       electron.onPdfFileSave(result => {
@@ -121,36 +162,8 @@ const Offerbook = (function () {
     }
 
     $('#btn-change-image').on('click', () => {
-      const dialogConfig = {
-        title : 'Select image files.',
-        buttonLabel: 'Select',
-        filters: [{
-          name: "Image files", extensions: ["jpg", "jpeg", "png"]
-        }],
-        properties: ['openFile', 'multiSelections']
-      };
-      electron.openDialog('showOpenDialogSync', dialogConfig);
+      electron.loadImages(null, null, "ITEM_CHANGE_MODE");
     });
-
-    try{
-      let modalFileNames = [];
-      const changeImageContent = $('.load-image-edit-content');
-      electron.saveFileNames(filenames => {
-        modalFileNames = $('#edit-current-item div.hidden-filenames').attr('data-filenames').split(",");
-        ItemRelatives().renderFromImages(filenames, changeImageContent, false);
-        filenames.map((filename, index) => {
-          return modalFileNames.push(filename);
-        })
-        
-        $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
-          ItemRelatives().itemChecking(e);
-        });
-
-        $('#edit-current-item div.hidden-filenames').attr('data-filenames', modalFileNames);
-      });
-    }catch(e){
-      console.log(e);
-    }
 
     $('#btn-edit-item').on('click', function() {
       const goods_number = $('input[name="goods-edit-number"]').val();
@@ -160,7 +173,11 @@ const Offerbook = (function () {
       const brandId = $('input[name="goods-edit-itemBrandId"]').attr("value");
       const id = $('input[name="goods-edit-itemId"]').attr("value");
 
-      let modalFileNames = $('.hidden-filenames').attr('data-filenames').split(',');
+      let modalFileNames = [];
+      $('#edit-current-item div.hidden-filename').each(function() {
+        modalFileNames.push($(this).data('filename'));
+      });
+      console.log(modalFileNames);
       
       const imageCards = $('.load-image-edit-content div[choosed-main-image]');
       let firstIndex;
@@ -182,7 +199,12 @@ const Offerbook = (function () {
       item.find('input.item-symbol').val(goods_symbol);
       item.find('input.item-price').val(goods_price);
 
-      item.find('div.hidden-item-filenames').attr('data-item-filenames', modalFileNames);
+      item.find('div.hidden-item-filename').remove();
+
+      modalFileNames.forEach(function(modalFileName) {
+        item.append('<div class="hidden-item-filename"></div>');
+        item.find('.hidden-item-filename:last').data('item-filename', modalFileName);
+      });
       item.find('div.item-img').css('background-image', 'url(' + modalFileNames[0].replaceAll('\\', '\/') + ')');
 
       $('#close-edit-item-modal').click();

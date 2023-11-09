@@ -73,16 +73,20 @@ Item.prototype.init = function() {
         itemFileNames.push($(this).data('item-filename'));
     });
 
-    $('#edit-current-item div.hidden-filenames').attr('data-filenames', itemFileNames);
+    $('#edit-current-item .hidden-filename').remove();
+
+    itemFileNames.forEach(function(itemFileName) {
+      $('#edit-current-item .item-block').append('<div class="hidden-filename"></div>')
+      $('#edit-current-item .item-block .hidden-filename:last').data('filename', itemFileName);
+    });
 
     const changeImageContent = $('.load-image-edit-content');
     changeImageContent.empty();
 
-    let modalFileNames = $('#edit-current-item div.hidden-filenames').attr('data-filenames').split(',');
 
     $('#btn-edit-item').prop('disabled', false);
 
-    ItemRelatives().renderFromImages(modalFileNames, changeImageContent, true);
+    ItemRelatives().renderFromImages(itemFileNames, changeImageContent, true);
 
     $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
       ItemRelatives().itemChecking(e);

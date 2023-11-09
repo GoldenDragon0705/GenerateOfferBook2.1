@@ -56,6 +56,7 @@ Brand.prototype.init = function() {
     $('.load-image-content').empty();
     $('#current-brand-id').val(self.id);
     $('#current-offer-id').val(self.offerId);
+    $('#create-new-item .item-block .hidden-create-item').remove();
   });
   
   if(self.offerContainer.find('li[data-brandname]').length == 1) {
