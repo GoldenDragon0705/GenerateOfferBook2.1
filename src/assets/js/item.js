@@ -24,7 +24,6 @@ Item.prototype.init = function() {
                                 <input type="text" class="form-control text-center item-number">\
                             </div>\
                             <div class="item-img"></div>\
-                            <div class="hidden-item-filenames" data-item-fileNames="" hidden></div>\
                             <div class="form-group mt-2">\
                                 <input type="text" class="form-control item-symbol" placeholder="Symbol: ">\
                             </div>\
@@ -37,10 +36,12 @@ Item.prototype.init = function() {
                             </div>\
                           </div>\
                       </div>');
-  const filename = self.filenames[0].replaceAll("\\", "\/");
-  $('[data-itemid="' + self.id + '"] .item-img').css('background-image', 'url(' + filename + ')');
-  $('[data-itemid="' + self.id + '"] .hidden-item-filenames').attr('data-item-filenames', self.filenames);
   
+  $('[data-itemid="' + self.id + '"] .item-img').css('background-image', 'url(' + self.filenames[0].replaceAll("\\", "\/") + ')');
+  self.filenames.forEach(function(filename) {
+    $('[data-itemid="' + self.id + '"]').append('<div class="hidden-item-filename"></div>');
+    $('[data-itemid="' + self.id + '"] .hidden-item-filename:last').data('item-filename', filename);
+  });  
 
   if(self.no == ""){
     $('[data-itemid="' + self.id + '"] input.item-number').val(`${offerPrefix}-${brandIndex}-${itemIndex}`);
@@ -67,7 +68,10 @@ Item.prototype.init = function() {
     $('input[name="goods-edit-itemOfferId"]').attr("value", self.offerId);
     $('input[name="goods-edit-itemBrandId"]').attr("value", self.brandId);
 
-    const itemFileNames = $('[data-itemid="' + self.id + '"] .hidden-item-filenames').attr('data-item-filenames');
+    let itemFileNames = [];
+    $('[data-itemid="' + self.id + '"] .hidden-item-filename').each(function() {
+        itemFileNames.push($(this).data('item-filename'));
+    });
 
     $('#edit-current-item div.hidden-filenames').attr('data-filenames', itemFileNames);
 
