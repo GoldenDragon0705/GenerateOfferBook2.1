@@ -3,6 +3,7 @@ const url = require('url')
 const path = require('path');
 const { param } = require('jquery');
 const PdfModule = require('./src/modules/pdf.module');
+const DocxModule = require('./src/modules/docx.module');
 let win;
 
 function createWindow() {
@@ -55,6 +56,20 @@ function createWindow() {
     const filename = dialog.showSaveDialogSync(config);
     const pdfResult = PdfModule.generate(data, filename);
     e.sender.send("generated_pdf", pdfResult);
+  });
+
+  ipcMain.handle('save_doc_dialog', (e, data) => {
+    const config = {
+      title : 'Select path for save.',
+      buttonLabel : 'Save',
+      properties : ['saveFile'],
+      filters: [
+        {name : "DOC file", extensions: ["doc", "docx"]},
+        {name : "All files", extensions : ["*"]}  
+      ]
+    };
+    const filename = dialog.showSaveDialogSync(config);
+    const docResult = DocxModule.generate(data, filename);
   });
 };
 
