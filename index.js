@@ -65,12 +65,13 @@ function createWindow() {
       buttonLabel : 'Save',
       properties : ['saveFile'],
       filters: [
-        {name : "DOC file", extensions: ["doc", "docx"]},
+        {name : "DOC file", extensions: ["docx", "doc"]},
         {name : "All files", extensions : ["*"]}  
       ]
     };
     const filename = dialog.showSaveDialogSync(config);
     const docResult = DocxModule.generate(data, filename);
+    e.sender.send("generated_doc", docResult);
   });
 
   ipcMain.handle('save_offer_dialog', (e, data) => {

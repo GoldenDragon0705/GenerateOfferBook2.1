@@ -158,6 +158,17 @@ const Offerbook = (function () {
         }
       });
 
+      electron.onDocFileSave(result => {
+        if(result) {
+          return $.toast({
+            heading: 'Success.',
+            text: 'Doc file is saved successfully.',
+            icon: 'success',
+            position: 'bottom-right',
+          });
+        }
+      });
+
       electron.onObsSave(function(data) {
         if(!data) {
           return $.toast({
