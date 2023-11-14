@@ -21,7 +21,7 @@ Offer.prototype.init = function() {
   offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel" data-prefix="' + self.prefix + '">\
                               <div class="offer-actions-bar mt-2 mb-3 p-3 d-flex border rounded">\
                                 <a href="javascript:" class="me-4 btn_save_offer"><i class="fa fa-save"></i> Save this offer</a>\
-                                <a href="javascript:" class="me-4"><i class="fa fa-file-word-o"></i> Generate docx</a>\
+                                <a href="javascript:" class="me-4 btn_gen_doc"><i class="fa fa-file-word-o"></i> Generate docx</a>\
                                 <a href="javascript:" class="me-4 btn_gen_pdf"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
                                 <a href="javascript:" class="me-auto btn_gen_secure"><i class="fa fa-file-zip-o"></i> Generate secure file</a>\
                                 <a href="javascript:" class="me-4"  data-bs-toggle="modal" data-bs-target="#setting-offer"><i class="fa fa-cog"></i> Setting</a>\
@@ -130,6 +130,25 @@ Offer.prototype.init = function() {
       }
     });
 
+    newContainer.find('a.btn_gen_doc').on('click', function(){
+      if(!newContainer.find('.item-block').length) {
+        return $.toast ({
+          heading : 'No items to generate doc',
+          text : 'Please create brands and items.',
+          icon : 'warning',
+          position : 'bottom-right'
+        });
+      }
+
+      // save dialog
+      try {
+        electron.saveDocDialog(self.getOfferData());
+      } catch (e) {
+        console.log("Opening savedialog is failed. This is web mode.");
+      }
+
+    });
+    
     newContainer.find('a.btn_save_offer').on("click", function() {
       try {
         electron.saveOfferDialog(self.getOfferData());
@@ -212,7 +231,6 @@ Offer.prototype.getOfferData = function() {
     });
     offerData.brands.push(brand);
   });
-  console.log(offerData);
   return offerData;
 };
 
