@@ -159,7 +159,23 @@ Offer.prototype.init = function() {
     });
 
     newContainer.find('a.btn_offer_close').on("click", function() {
-      self.close();
+      if(self.isModified) {
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "This offerbook is modified. Do you want close this offerbook? The changes will be lost.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, close it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                self.close();
+            }
+        });
+      } else {
+        self.close();
+      }
     });
 
 
@@ -259,10 +275,7 @@ Offer.prototype.setFilename = function(filename) {
 
 Offer.prototype.close = function() {
   const self = this;
-  if(self.isModified) {
-
-  } else {
-    $('a[href="#' + self.id + '"]').parent().remove();
+  $('a[href="#' + self.id + '"]').parent().remove();
     $('#' + self.id).remove();
     if($('a[data-offername]').length) {
       $('a[data-offername]:first').addClass("active");
@@ -271,5 +284,4 @@ Offer.prototype.close = function() {
     } else {
       $('#no-offer-alert').show();
     }
-  }
 };
