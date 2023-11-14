@@ -73,18 +73,20 @@ function createWindow() {
     e.sender.send("generated_doc", docResult);
   });
 
-  ipcMain.handle('save_offer_dialog', (e, data) => {
-    const config = {
-      title: 'Select path for save.',
-      buttonLabel: 'Save',
-      properties: ['saveFile'],
-      filters: [{
-        name: "Obs(Offerbook script) file", extensions: ["obs"]
-      }]
-    };
-    const filename = dialog.showSaveDialogSync(config);
+  ipcMain.handle('save_offer_dialog', (e, data, filename) => {
+    if(!filename) {
+      const config = {
+        title: 'Select path for save.',
+        buttonLabel: 'Save',
+        properties: ['saveFile'],
+        filters: [{
+          name: "Obs(Offerbook script) file", extensions: ["obs"]
+        }]
+      };
+      filename = dialog.showSaveDialogSync(config);
+    }
     if(!filename) return ;
-    e.sender.send("generated_obs", ObsModule.save(filename, data)); 
+    e.sender.send("generated_obs", ObsModule.save(filename, data), filename); 
   });
 
   ipcMain.handle("open_offer_dialog", (e) => {
@@ -98,7 +100,7 @@ function createWindow() {
     };
     const filename = dialog.showOpenDialogSync(win, config)[0] || "";
     if(!filename) return;
-    e.sender.send("obs_file_content", ObsModule.read(filename));
+    e.sender.send("obs_file_content", ObsModule.read(filename), filename);
   });
 };
 

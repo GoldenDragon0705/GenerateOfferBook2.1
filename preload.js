@@ -36,20 +36,20 @@ contextBridge.exposeInMainWorld('electron', {
         callback(data);
       });
     },
-    saveOfferDialog : (data) => {
-      ipcRenderer.invoke("save_offer_dialog", data);
+    saveOfferDialog : (data, filename) => {
+      ipcRenderer.invoke("save_offer_dialog", data, filename);
     },
     onObsSave: (callback) => {
-      ipcRenderer.on("generated_obs", (event, data) => {
-        callback(data);
+      ipcRenderer.on("generated_obs", (event, data, filename) => {
+        callback(data, filename);
       });
     },
     openOfferDialog: () => {
       ipcRenderer.invoke("open_offer_dialog");
     },
     onObsOpen: callback => {
-      ipcRenderer.on("obs_file_content", (e, data) => {
-        callback(data);
+      ipcRenderer.on("obs_file_content", (e, data, filename) => {
+        callback(data, filename);
       });
     }
 });

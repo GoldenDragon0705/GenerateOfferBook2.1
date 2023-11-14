@@ -185,7 +185,7 @@ const Offerbook = (function () {
         }
       });
 
-      electron.onObsOpen(function(data) {
+      electron.onObsOpen(function(data, filename) {
         if(!data) {
           return $.toast({
             heading: 'Opening Error',
@@ -203,6 +203,7 @@ const Offerbook = (function () {
         brands.forEach(function(brand) {
           openedOffer.addBrand(brand);
         });
+        openedOffer.setFilename(filename);
         offers[id] = openedOffer;
       });
     } catch (e) {

@@ -8,6 +8,7 @@ const Offer = function(id, offername, isModified = true) {
   this.container = $('#' + id);
   this.prefix = 0;
   this.isModified = isModified;
+  this.filename = null;
   this.init();
 }
 
@@ -151,7 +152,7 @@ Offer.prototype.init = function() {
     
     newContainer.find('a.btn_save_offer').on("click", function() {
       try {
-        electron.saveOfferDialog(self.getOfferData());
+        electron.saveOfferDialog(self.getOfferData(), self.filename);
       } catch (e) {
         console.log("Opening save offer dialog is failed. This is web mode.");
       }
@@ -159,12 +160,13 @@ Offer.prototype.init = function() {
 
 
     try {
-      electron.onObsSave(function(data) {
+      electron.onObsSave(function(data, filename) {
         if(!data) return;
         const { id, name } = data;
         if(!id) return;
         if(id == self.id) {
           self.isModified = false;
+          self.filename = filename;
           offersHeader.find('a[href="#' + id + '"]').html(name);
           return $.toast({
             heading: 'Success.',
@@ -246,4 +248,8 @@ Offer.prototype.addBrand = function(brand) {
     console.log(item);
     new Item(self.id, brandId, item.filenames, item.itemId, item.symbol, item.price, item.no);
   });
+};
+
+Offer.prototype.setFilename = function(filename) {
+  this.filename = filename;
 };
