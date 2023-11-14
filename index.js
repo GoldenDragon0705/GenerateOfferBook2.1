@@ -1,9 +1,8 @@
 const { app, BrowserWindow, Menu, ipcMain, dialog, session } = require('electron')
 const url = require('url')
 const path = require('path');
-const { param } = require('jquery');
 const PdfModule = require('./src/modules/pdf.module');
-const DocxModule = require('./src/modules/docx.module');
+// const DocxModule = require('./src/modules/docx.module');
 const ObsModule = require('./src/modules/obs.module');
 let win;
 
@@ -70,8 +69,8 @@ function createWindow() {
       ]
     };
     const filename = dialog.showSaveDialogSync(config);
-    const docResult = DocxModule.generate(data, filename);
-    e.sender.send("generated_doc", docResult);
+    // const docResult = DocxModule.generate(data, filename);
+    // e.sender.send("generated_doc", docResult);
   });
 
   ipcMain.handle('save_offer_dialog', (e, data) => {

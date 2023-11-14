@@ -218,7 +218,7 @@ Offer.prototype.getOfferData = function() {
       items : []
     };
 
-    $('div[data-brandid] .item-block').each(function() {
+    $('div[data-brandid="' + brand.brandId + '"] .item-block').each(function() {
       const itemId = $(this).data('itemid');
       const no = $(this).find('input.item-number').val();
       const symbol = $(this).find('input.item-symbol').val();
