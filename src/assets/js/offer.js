@@ -3,7 +3,7 @@ const inputUpdateOfferName = $('#update_offer_name');
 const inputUpdatePrefix = $('#prefix_item_number');
 
 const Offer = function(id, offername, isModified = true) {
-  this.id = id;
+  this.id = id || Date.now();
   this.offername = offername;
   this.container = $('#' + id);
   this.prefix = 0;
@@ -17,7 +17,7 @@ Offer.prototype.init = function() {
   const self = this;
 
   offersHeader.append('<li class="nav-item">\
-                              <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '">' + self.offername + (self.isModified?" *":"") +  '</a>\
+                              <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '" data-offerid="' + self.id + '">' + self.offername + (self.isModified?" *":"") +  '</a>\
                             </li>');
   offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel" data-prefix="' + self.prefix + '">\
                               <div class="offer-actions-bar mt-2 mb-3 p-3 d-flex border rounded">\
@@ -26,7 +26,7 @@ Offer.prototype.init = function() {
                                 <a href="javascript:" class="me-4 btn_gen_pdf"><i class="fa fa-file-pdf-o"></i> Generate pdf</a>\
                                 <a href="javascript:" class="me-auto btn_gen_secure"><i class="fa fa-file-zip-o"></i> Generate secure file</a>\
                                 <a href="javascript:" class="me-4"  data-bs-toggle="modal" data-bs-target="#setting-offer"><i class="fa fa-cog"></i> Setting</a>\
-                                <a href="javascript:" >Close</a>\
+                                <a href="javascript:" class="btn_offer_close">Close</a>\
                               </div>\
                             <div class="row">\
                               <div class="col-md-3">\
@@ -158,6 +158,10 @@ Offer.prototype.init = function() {
       }
     });
 
+    newContainer.find('a.btn_offer_close').on("click", function() {
+      self.close();
+    });
+
 
     try {
       electron.onObsSave(function(data, filename) {
@@ -245,11 +249,27 @@ Offer.prototype.addBrand = function(brand) {
   const { brandId, brandIndex, brandName, items } = brand;
   new Brand(this.id, brandName, brandId);
   items.forEach(function(item) {
-    console.log(item);
     new Item(self.id, brandId, item.filenames, item.itemId, item.symbol, item.price, item.no);
   });
 };
 
 Offer.prototype.setFilename = function(filename) {
   this.filename = filename;
+};
+
+Offer.prototype.close = function() {
+  const self = this;
+  if(self.isModified) {
+
+  } else {
+    $('a[href="#' + self.id + '"]').parent().remove();
+    $('#' + self.id).remove();
+    if($('a[data-offername]').length) {
+      $('a[data-offername]:first').addClass("active");
+      const activeOfferId = $('a[data-offername].active').data("offerid");
+      $('#' + activeOfferId).addClass("active");
+    } else {
+      $('#no-offer-alert').show();
+    }
+  }
 };
