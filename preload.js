@@ -34,5 +34,13 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.on("generated_obs", (event, data) => {
         callback(data);
       });
+    },
+    openOfferDialog: () => {
+      ipcRenderer.invoke("open_offer_dialog");
+    },
+    onObsOpen: callback => {
+      ipcRenderer.on("obs_file_content", (e, data) => {
+        callback(data);
+      });
     }
 });

@@ -71,6 +71,20 @@ function createWindow() {
     if(!filename) return ;
     e.sender.send("generated_obs", ObsModule.save(filename, data)); 
   });
+
+  ipcMain.handle("open_offer_dialog", (e) => {
+    const config = {
+      title: 'Select Offerbook script file.',
+      buttonLabel: 'Select',
+      filters: [{
+        name: "Obs file", extensions: ["obs"]
+      }],
+      properties: ['openFile']
+    };
+    const filename = dialog.showOpenDialogSync(win, config)[0] || "";
+    if(!filename) return;
+    e.sender.send("obs_file_content", ObsModule.read(filename));
+  });
 };
 
 const menutemplate = [

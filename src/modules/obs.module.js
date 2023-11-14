@@ -16,8 +16,18 @@ const ObsModule = (function() {
     return result;
   };
 
+  const read = function(filename) {
+    let file = null;
+    try { 
+      file = JSON.parse(fs.readFileSync(filename));
+    } catch (e) {
+      console.log(e);
+    }
+    return file;
+  }
+
   return {
-    save
+    save, read
   };
 })();
 

@@ -2,12 +2,12 @@ const btnSaveOfferSetting = $('#btn_save_offer_setting');
 const inputUpdateOfferName = $('#update_offer_name');
 const inputUpdatePrefix = $('#prefix_item_number');
 
-const Offer = function(id, offername) {
+const Offer = function(id, offername, isModified = true) {
   this.id = id;
   this.offername = offername;
   this.container = $('#' + id);
   this.prefix = 0;
-  this.isModified = true;
+  this.isModified = isModified;
   this.init();
 }
 
@@ -16,7 +16,7 @@ Offer.prototype.init = function() {
   const self = this;
 
   offersHeader.append('<li class="nav-item">\
-                              <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '">' + self.offername + ' *</a>\
+                              <a class="nav-link" data-bs-toggle="tab" href="#' + self.id + '" data-offername="' + self.offername + '">' + self.offername + (self.isModified?" *":"") +  '</a>\
                             </li>');
   offersContainer.append('<div class="tab-pane container-fluid px-0 py-2" id="' + self.id + '" role="tabpanel" data-prefix="' + self.prefix + '">\
                               <div class="offer-actions-bar mt-2 mb-3 p-3 d-flex border rounded">\
@@ -214,4 +214,18 @@ Offer.prototype.getOfferData = function() {
   });
   console.log(offerData);
   return offerData;
+};
+
+Offer.prototype.updatePrefix = function(newPrefix) {
+  this.prefix = newPrefix;
+};
+
+Offer.prototype.addBrand = function(brand) {
+  const self = this;
+  const { brandId, brandIndex, brandName, items } = brand;
+  new Brand(this.id, brandName, brandId);
+  items.forEach(function(item) {
+    console.log(item);
+    new Item(self.id, brandId, item.filenames, item.itemId, item.symbol, item.price, item.no);
+  });
 };

@@ -5,6 +5,7 @@ const btnCreateOffer = $('#btn_create_offer');
 const offersContainer = $('#offer-contents');
 const offersHeader = $('#offer-tabs');
 const imgContent = $('.load-image-content');
+const bntOpenOffer = $('.btn-open-offer');
 
 const Offerbook = (function () {
 
@@ -35,8 +36,12 @@ const Offerbook = (function () {
       inputNewOffername.val("");
     });
 
-    $('.btn-open-offer').on('click', function() {
-      alert("open ffer");
+    bntOpenOffer.on('click', function() {
+      try {
+        electron.openOfferDialog();
+      } catch (e) {
+        console.log("Open offer dialog is failed. It is not electron mode.");
+      }
     });
 
     $('[data-bs-target="#create-new-offer"]').on("click", function() {
@@ -167,6 +172,27 @@ const Offerbook = (function () {
             position: 'top-right',
           });          
         }
+      });
+
+      electron.onObsOpen(function(data) {
+        if(!data) {
+          return $.toast({
+            heading: 'Opening Error',
+            text: 'Opening offerbook script file  is failed.',
+            icon: 'error',
+            position: 'top-right',
+          });
+        }
+        const { id, name, brands, prefix } = data;
+        if($('#' + id).length) {
+          return alert("This offerbook is already opened.");
+        }
+        let openedOffer = new Offer(id, name, false);
+        openedOffer.updatePrefix(prefix);
+        brands.forEach(function(brand) {
+          openedOffer.addBrand(brand);
+        });
+        offers[id] = openedOffer;
       });
     } catch (e) {
       console.log("Load opened filenames is failed. web mode");

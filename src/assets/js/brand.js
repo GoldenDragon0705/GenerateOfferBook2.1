@@ -1,6 +1,6 @@
 
-const Brand = function(offerId, brandName) {
-  this.id = Date.now();
+const Brand = function(offerId, brandName, brandId) {
+  this.id = brandId || Date.now();
   this.offerId = offerId;
   this.brandName = brandName;
   this.offerContainer = $('#' + offerId);
