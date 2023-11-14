@@ -4,6 +4,7 @@ const path = require('path');
 const { param } = require('jquery');
 const PdfModule = require('./src/modules/pdf.module');
 const DocxModule = require('./src/modules/docx.module');
+const ObsModule = require('./src/modules/obs.module');
 let win;
 
 function createWindow() {
@@ -51,7 +52,7 @@ function createWindow() {
       properties: ['saveFile'],
       filters: [{
         name: "PDF file", extensions: ["pdf"]
-      }, { name: 'All Files', extensions: ['*'] }]
+      }]
     };
     const filename = dialog.showSaveDialogSync(config);
     const pdfResult = PdfModule.generate(data, filename);
@@ -70,6 +71,20 @@ function createWindow() {
     };
     const filename = dialog.showSaveDialogSync(config);
     const docResult = DocxModule.generate(data, filename);
+  });
+
+  ipcMain.handle('save_offer_dialog', (e, data) => {
+    const config = {
+      title: 'Select path for save.',
+      buttonLabel: 'Save',
+      properties: ['saveFile'],
+      filters: [{
+        name: "Obs(Offerbook script) file", extensions: ["obs"]
+      }]
+    };
+    const filename = dialog.showSaveDialogSync(config);
+    if(!filename) return ;
+    e.sender.send("generated_obs", ObsModule.save(filename, data)); 
   });
 };
 
