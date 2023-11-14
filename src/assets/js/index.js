@@ -157,6 +157,17 @@ const Offerbook = (function () {
           });
         }
       });
+
+      electron.onObsSave(function(data) {
+        if(!data) {
+          return $.toast({
+            heading: 'Saving is error.',
+            text: 'Offerbook script file saving is failed.',
+            icon: 'error',
+            position: 'top-right',
+          });          
+        }
+      });
     } catch (e) {
       console.log("Load opened filenames is failed. web mode");
     }

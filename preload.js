@@ -26,5 +26,13 @@ contextBridge.exposeInMainWorld('electron', {
       ipcRenderer.on("generated_pdf", (event, data) => {
         callback(data);
       });
+    },
+    saveOfferDialog : (data) => {
+      ipcRenderer.invoke("save_offer_dialog", data);
+    },
+    onObsSave: (callback) => {
+      ipcRenderer.on("generated_obs", (event, data) => {
+        callback(data);
+      });
     }
 });
