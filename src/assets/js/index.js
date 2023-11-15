@@ -175,7 +175,7 @@ const Offerbook = (function () {
         }
       });
 
-      electron.onObsSave(function(data) {
+      electron.onObsSave(function(data, filename) {
         if(!data) {
           return $.toast({
             heading: 'Saving is error.',
@@ -183,6 +183,20 @@ const Offerbook = (function () {
             icon: 'error',
             position: 'top-right',
           });          
+        }
+
+        const { id, name } = data;
+        if(!id) return;
+        if(offers[id]) {
+          offersHeader.find('a[href="#' + id + '"]').html(name);
+          offers[id].setModified(false);
+          offers[id].setFilename(filename);
+          return $.toast({
+            heading: 'Success.',
+            text: 'Offerbook script file is saved successfully.',
+            icon: 'success',
+            position: 'top-right',
+          });
         }
       });
 

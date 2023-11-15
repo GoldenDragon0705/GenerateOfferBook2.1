@@ -152,7 +152,7 @@ Offer.prototype.init = function() {
 
     });
     
-    newContainer.find('a.btn_save_offer').on("click", function() {
+    newContainer.find('a.btn_save_offer').on("click", function(e) {
       try {
         electron.saveOfferDialog(self.getOfferData(), self.filename);
       } catch (e) {
@@ -179,28 +179,6 @@ Offer.prototype.init = function() {
         self.close();
       }
     });
-
-
-    try {
-      electron.onObsSave(function(data, filename) {
-        if(!data) return;
-        const { id, name } = data;
-        if(!id) return;
-        if(id == self.id) {          
-          self.filename = filename;
-          offersHeader.find('a[href="#' + id + '"]').html(name);
-          self.setModified(false);
-          return $.toast({
-            heading: 'Success.',
-            text: 'Offerbook script file is saved successfully.',
-            icon: 'success',
-            position: 'top-right',
-          });
-        }
-      });
-    } catch (e) {
-      console.log("This is not electron mode.");
-    }
     
 };
 
