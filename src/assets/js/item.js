@@ -36,6 +36,8 @@ Item.prototype.init = function() {
                             </div>\
                           </div>\
                       </div>');
+
+  const newItemBlock = $('[data-itemid="' + self.id + '"]');
   
   $('[data-itemid="' + self.id + '"] .item-img').css('background-image', 'url(' + self.filenames[0].replaceAll("\\", "\/") + ')');
   self.filenames.forEach(function(filename) {
@@ -91,5 +93,20 @@ Item.prototype.init = function() {
     $('.load-image-edit-content .goods-image-wrapper').on('click', (e) => {
       ItemRelatives().itemChecking(e);
     });
+  });
+
+  newItemBlock.find("input.item-number").on("change", function() {
+    const e = new CustomEvent("itemchange", { detail : {offerId : self.offerId, brandId : self.brandId, itemId : self.id} });
+    document.dispatchEvent(e);
+  });
+
+  newItemBlock.find("input.item-symbol").on("change", function() {
+    const e = new CustomEvent("itemchange", { detail : {offerId : self.offerId, brandId : self.brandId, itemId : self.id} });
+    document.dispatchEvent(e);
+  });
+
+  newItemBlock.find("input.item-price").on("change", function() {
+    const e = new CustomEvent("itemchange", { detail : {offerId : self.offerId, brandId : self.brandId, itemId : self.id} });
+    document.dispatchEvent(e);
   });
 };

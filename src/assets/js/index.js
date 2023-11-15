@@ -150,6 +150,7 @@ const Offerbook = (function () {
         const id = `${offerId}_${brandId}_${Date.now()}`;
         new Item(offerId,brandId,filenames, id, goods_symbol, goods_price, goods_number);
         $('#close-create-item-modal').click();
+        offers[offerId] && offers[offerId].setModified(true);
       });
 
       electron.onPdfFileSave(result => {
@@ -257,6 +258,11 @@ const Offerbook = (function () {
       item.find('div.item-img').css('background-image', 'url(' + modalFileNames[0].replaceAll('\\', '\/') + ')');
 
       $('#close-edit-item-modal').click();
+    });
+
+    $(document).on("itemchange", function(e) {
+      const { offerId } = e.detail;
+      offers[offerId] && offers[offerId].setModified(true);
     });
   };
 

@@ -84,6 +84,7 @@ Offer.prototype.init = function() {
       if(!brandName.length) return;
       new Brand(self.id, brandName);
       inputNewBrandName.val("");
+      self.setModified(true);
     });
 
     newContainer.find('[data-bs-target="#setting-offer"]').on("click", function() {
@@ -109,6 +110,7 @@ Offer.prototype.init = function() {
         $('#setting-offer button[data-bs-dismiss]').click();
         // update number of items
         self.updateNumbers();
+        self.setModified(true);
       });
     });
 
@@ -184,10 +186,10 @@ Offer.prototype.init = function() {
         if(!data) return;
         const { id, name } = data;
         if(!id) return;
-        if(id == self.id) {
-          self.isModified = false;
+        if(id == self.id) {          
           self.filename = filename;
           offersHeader.find('a[href="#' + id + '"]').html(name);
+          self.setModified(false);
           return $.toast({
             heading: 'Success.',
             text: 'Offerbook script file is saved successfully.',
@@ -208,6 +210,7 @@ Offer.prototype.loadedItemImages = function (brandId, filenames) {
   filenames.map(function(filename, index) {
     return new Item(self.id, brandId, [filename], `${self.id}_${brandId}_${startIndex + index}`);
   });
+  self.setModified(true);
 };
 
 Offer.prototype.updateNumbers = function() {
@@ -221,6 +224,7 @@ Offer.prototype.updateNumbers = function() {
       $(this).find('input.item-number').val(`${self.prefix}-${index}-${itemIndex}`);
     });
   });
+  self.setModified(true);
 };
 
 Offer.prototype.getOfferData = function() {
@@ -284,4 +288,9 @@ Offer.prototype.close = function() {
     } else {
       $('#no-offer-alert').show();
     }
+};
+
+Offer.prototype.setModified = function(isModified) {
+  this.isModified = isModified;
+  $('a[data-offerid="' + this.id + '"]').html(this.offername + (isModified ? " *":""));
 };
